@@ -1,0 +1,1 @@
+A tool for removing EXIF information from images
