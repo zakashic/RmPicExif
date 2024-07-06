@@ -11,16 +11,16 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("input a folder path。")
+		fmt.Println("Please provide a folder path.")
 		return
 	}
 
 	folderPath := os.Args[1]
 
 	if err := processFolder(folderPath); err != nil {
-		fmt.Printf("Error processing file: %v\n", err)
+		fmt.Printf("Error processing folder: %v\n", err)
 	} else {
-		fmt.Println("All done.")
+		fmt.Println("Successfully removed EXIF data from all JPG and PNG files.")
 	}
 }
 
@@ -40,9 +40,9 @@ func processFolder(folderPath string) error {
 				err = removePNGExif(path)
 			}
 			if err != nil {
-				fmt.Printf("Error processing file %s: %v\n", path, err)
+				fmt.Printf("Error processing file %s: %v", path, err)
 			} else {
-				fmt.Printf("File processed: %s\n", path)
+				fmt.Printf("Successfully processed file: %s", path)
 			}
 		}
 		return nil
@@ -54,7 +54,12 @@ func removeJPGExif(filePath string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Printf("Error closing file: %v", err)
+		}
+	}(file)
 
 	img, err := jpeg.Decode(file)
 	if err != nil {
