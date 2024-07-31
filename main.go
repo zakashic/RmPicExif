@@ -9,6 +9,7 @@ import (
 	"runtime"
 	"strings"
 	"sync"
+	"time"
 )
 
 func removeJPGExif(filePath string) error {
@@ -164,6 +165,7 @@ func processFolder(folderPath string) error {
 }
 
 func main() {
+	timeStart := time.Now().Unix()
 	if len(os.Args) < 2 {
 		fmt.Println("Please provide a folder path.")
 		return
@@ -176,4 +178,5 @@ func main() {
 	} else {
 		fmt.Println("Successfully removed EXIF data from all JPG and PNG files.")
 	}
+	fmt.Printf("Time spent: %vs\n", time.Now().Unix()-timeStart)
 }
